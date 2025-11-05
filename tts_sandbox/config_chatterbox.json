@@ -1,0 +1,9 @@
+{
+  "output_dir": "output",
+  "multilingual": true,
+  "language_id": null,
+  "exaggeration": 0,
+  "cfg_weight": 0.5,
+  "sample_rate": 24000,
+  "translated_text": "Tanzania, home to some of the most breathtaking wildlife on Earth."
+}

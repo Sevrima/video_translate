@@ -1,0 +1,16 @@
+# XTTS-v2 Environment
+# NOTE: PyTorch with CUDA is installed automatically by main.py before this file
+# If installing manually, run: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# HuggingFace for model downloads
+huggingface_hub>=0.19.0
+
+# Transformers compatibility (TTS requires older version with BeamSearchScorer)
+transformers<4.42.0
+
+# Coqui XTTS-v2
+TTS
+
+# Audio processing
+soundfile>=0.12.0
+pydub>=0.25.0

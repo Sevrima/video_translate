@@ -1,0 +1,15 @@
+{
+  "output_dir": "output",
+  "tts_language": "EN",
+  "base_speaker": "EN-Default",
+  "speed": 1.0,
+  "tau": 0.05,
+  "vad": true,
+  "translated_text": "Dies ist ein Beispiel für deutsche Sprachsynthese mit Stimmklonen. OpenVoice ermöglicht es uns, die Stimme des Sprechers beizubehalten, während wir den Inhalt in eine andere Sprache übersetzen.",
+  "_comments": {
+    "tau": "Voice conversion strength (0.1-1.0). Lower = stronger cloning, Higher = more neutral. Try 0.1-0.5 for better resemblance",
+    "base_speaker": "Available: EN-Default, EN-US, EN-BR, EN-INDIA, EN-AU, EN-Newest",
+    "speed": "Speech speed multiplier. 1.0 = normal, 0.8-1.2 recommended range",
+    "vad": "Voice Activity Detection - removes silence for better quality extraction"
+  }
+}
