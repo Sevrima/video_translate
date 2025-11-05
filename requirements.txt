@@ -1,0 +1,30 @@
+# Text Translation Pipeline Dependencies
+
+# NumPy - must be <2.0 for scipy/sklearn compatibility
+numpy>=1.21.6,<2.0.0
+
+# HuggingFace Transformers
+transformers>=4.45.0
+sentencepiece>=0.1.99
+protobuf>=3.20.0
+
+# Model Loading Optimization
+accelerate>=0.20.0
+
+# SRT File Processing
+pysrt>=1.1.2
+
+# Language Detection (fallback)
+langdetect>=1.0.9
+
+# Utilities
+tqdm>=4.65.0
+
+# Video/Audio Processing
+ffmpeg-python>=0.2.0
+pydub>=0.25.1
+librosa>=0.10.0
+soundfile>=0.12.1
+
+# Chatterbox TTS (installed separately via setup.py)
+# chatterbox-tts

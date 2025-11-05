@@ -1,0 +1,13 @@
+*.wav
+*.pth
+*.pyc
+*.srt
+*/openvoice_v2_models/*
+
+# Virtual environments
+*venv_openvoice*
+*venv_xtts*
+*venv_chatterbox*
+# Output directories
+tts/output/
+tts_sandbox/test_chatterbox.py

@@ -1,0 +1,38 @@
+{
+  "translation": {
+    "model_name": "facebook/nllb-200-distilled-600M",
+    "target_language": "deu_Latn",
+    "device": "cuda",
+    "batch_size": 8,
+    "max_length": 512
+  },
+  "language_detection": {
+    "method": "fasttext",
+    "confidence_threshold": 0.8
+  },
+  "tts": {
+    "exaggeration": 0.5,
+    "cfg_weight": 0.5,
+    "sample_rate": 24000,
+    "multilingual": true,
+    "single_pass_mode": false
+  },
+  "audio": {
+    "sample_rate": 24000
+  },
+  "video": {
+    "video_codec": "copy",
+    "audio_codec": "aac",
+    "audio_bitrate": "192k"
+  },
+  "pipeline": {
+    "temp_dir": "temp",
+    "output_dir": "output",
+    "keep_intermediate_files": true,
+    "segments_dir": "temp/segments"
+  },
+  "output": {
+    "encoding": "utf-8",
+    "preserve_formatting": true
+  }
+}
