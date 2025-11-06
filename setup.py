@@ -109,24 +109,78 @@ def main():
     check_cuda_available()
 
     # Step 3: Install other requirements
-    print_header("Step 3/4: Installing Other Dependencies")
+    print_header("Step 3/5: Installing Other Dependencies")
     run_command(
         [sys.executable, "-m", "pip", "install", "-r", str(requirements_file), "--upgrade"],
         "Installing transformers, sentencepiece, pysrt, ffmpeg-python, and other dependencies"
     )
 
-    # Step 4: Install Chatterbox TTS
-    print_header("Step 4/4: Installing Chatterbox TTS")
-    print("Installing chatterbox-tts for voice cloning and synthesis...\n")
+    # Step 4: Install numpy (required for chatterbox-tts build dependencies)
+    print_header("Step 4/6: Installing numpy")
+    print("-" * 60)
+    success = run_command(
+        [sys.executable, "-m", "pip", "install", "numpy"],
+        "Installing numpy"
+    )
+    if not success:
+        print("Failed to install numpy")
+        return 1
+    print("numpy installed successfully!\n")
+
+    # Step 5: Install Chatterbox TTS dependencies individually (skip pkuseg)
+    print_header("Step 5/6: Installing Chatterbox TTS")
+    print("Installing chatterbox-tts dependencies individually...")
+    print("Note: Skipping pkuseg (Chinese text segmentation) due to build issues on Windows")
+    print("-" * 60)
+
+    # Install all chatterbox-tts dependencies except pkuseg
+    deps_to_install = [
+        "s3tokenizer",
+        "transformers==4.46.3",
+        "diffusers==0.29.0",
+        "resemble-perth==1.0.1",
+        "conformer==0.3.2",
+        "safetensors==0.5.3"
+    ]
 
     success = run_command(
-        [sys.executable, "-m", "pip", "install", "chatterbox-tts"],
-        "Installing chatterbox-tts"
+        [sys.executable, "-m", "pip", "install"] + deps_to_install,
+        "Installing chatterbox-tts dependencies"
     )
 
     if not success:
-        print("⚠ Chatterbox TTS installation failed")
-        print("  You can install it manually later with: pip install chatterbox-tts\n")
+        print("Failed to install chatterbox-tts dependencies")
+        return 1
+
+    # Now install chatterbox-tts itself without dependencies
+    print("\nInstalling chatterbox-tts package...")
+    success = run_command(
+        [sys.executable, "-m", "pip", "install", "chatterbox-tts", "--no-deps"],
+        "Installing chatterbox-tts (without dependencies)"
+    )
+
+    if not success:
+        print("Failed to install chatterbox-tts")
+        return 1
+
+    print("chatterbox-tts installed successfully (without pkuseg)!\n")
+    print("Note: Chinese text support may be limited without pkuseg\n")
+
+    # Step 6: Install/Upgrade PyTorch with CUDA 12.4
+    print_header("Step 6/6: Upgrading PyTorch to CUDA 12.4")
+    print("This may take several minutes (downloading ~2GB)...")
+    print("-" * 60)
+    success = run_command(
+        [
+            sys.executable, "-m", "pip", "install",
+            "torch", "torchvision", "torchaudio",
+            "--index-url", "https://download.pytorch.org/whl/cu124"
+        ],
+        "Upgrading PyTorch with CUDA 12.4"
+    )
+    if not success:
+        print("⚠ PyTorch upgrade failed, but continuing...")
+    print("-" * 60)
 
     # Final summary
     print_header("Setup Complete!")

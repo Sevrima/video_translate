@@ -207,11 +207,11 @@ Examples:
         tts_handler = ChatterboxTTSHandler(tts_config)
         tts_handler.load_model()
 
-        # Check if single-pass mode is enabled
-        single_pass_mode = tts_config.get('single_pass_mode', False)
+        # Check if should generate audio in multiple segments (default: True)
+        use_multiple_segments = tts_config.get('use_multiple_segments', True)
 
-        if single_pass_mode:
-            print("\n▶ Single-pass TTS mode enabled")
+        if not use_multiple_segments:
+            print("\n▶ Single continuous audio mode enabled")
             print("  Generating one continuous audio file for all text")
 
             # Generate single audio file for all text
@@ -225,8 +225,8 @@ Examples:
             tts_handler.unload_model()
 
             # Step 4: Skip segmentation processing
-            print_header("Step 4/5: Processing Audio (Single-Pass Mode)")
-            print("✓ Using single audio file - no segmentation or time-stretching needed")
+            print_header("Step 4/5: Processing Audio (Continuous Mode)")
+            print("✓ Using continuous audio - no segmentation or time-stretching needed")
 
         else:
             # Generate audio for each segment (original behavior)

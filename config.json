@@ -12,10 +12,10 @@
   },
   "tts": {
     "exaggeration": 0.5,
-    "cfg_weight": 0.5,
+    "cfg_weight": 0.7,
     "sample_rate": 24000,
     "multilingual": true,
-    "single_pass_mode": false
+    "use_multiple_segments": true
   },
   "audio": {
     "sample_rate": 24000

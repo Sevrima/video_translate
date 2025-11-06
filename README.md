@@ -45,6 +45,7 @@ Output: video_de.mp4 (translated with cloned voice)
 Run the setup script to install all dependencies:
 
 ```bash
+conda create -n vid python==3.10
 python setup.py
 ```
 
@@ -63,7 +64,7 @@ python setup.py
 ### 2. Translate Complete Video
 
 ```bash
-python main.py --input data/Tanzania-2.mp4 --output data/Tanzania-2-DE.mp4 --srt data/Tanzania-caption.srt
+python main.py --input data/Tanzania-2.mp4 --output output/Tanzania-2-DE.mp4 --srt data/Tanzania-caption.srt
 ```
 
 **Requirements:**
@@ -116,23 +117,39 @@ python -m src.translate_srt --input subtitle.srt --output subtitle_de.srt --conf
 
 ## Configuration
 
-Edit `config.json` to customize translation settings:
+Edit `config.json` to customize translation and TTS settings:
 
-```json
-{
-  "translation": {
-    "model_name": "facebook/nllb-200-3.3B",
-    "target_language": "deu_Latn",
-    "device": "cuda",
-    "batch_size": 8,
-    "max_length": 512
-  },
-  "language_detection": {
-    "method": "fasttext",
-    "confidence_threshold": 0.8
-  }
-}
-```
+### TTS Configuration Options
+
+- **`exaggeration`** (default: `0.5`, range: 0.0 - 1.0): Controls voice expressiveness
+  - Lower values (0.0 - 0.3): More neutral/flat voice
+  - Higher values (0.7 - 1.0): More expressive/emotional voice
+  - Recommended: 0.5 for natural speech
+
+- **`cfg_weight`** (default: `0.7`, range: 0.0 - 1.0): Classifier-free guidance weight
+  - Lower values (0.0 - 0.5): More creative/varied output
+  - Higher values (0.7 - 1.0): More faithful to reference voice
+  - Recommended: 0.7 for voice cloning accuracy
+
+- **`use_multiple_segments`** (default: `true`): Audio generation mode
+  - `true`: Generate audio per SRT segment with time-stretching to match exact timing (recommended)
+  - `false`: Generate one continuous audio file (faster, but timing won't match SRT segments)
+
+### Translation Configuration Options
+
+- **`model_name`**: NLLB model to use
+  - `facebook/nllb-200-distilled-600M`: Faster, requires ~2GB VRAM
+  - `facebook/nllb-200-3.3B`: Higher quality, requires ~8GB VRAM
+
+- **`target_language`**: Target language code (see Language Codes below)
+
+- **`batch_size`**: Number of sentences to translate at once (higher = faster but more VRAM)
+
+### Pipeline Configuration Options
+
+- **`keep_intermediate_files`**: Keep temporary files for debugging (`temp/` directory)
+- **`temp_dir`**: Directory for temporary files
+- **`segments_dir`**: Directory for audio segment files
 
 ## Language Codes
 
@@ -152,6 +169,11 @@ NLLB uses language codes in the format `xxx_Yyyy`:
 
 [See full list of 200+ supported languages](https://github.com/facebookresearch/fairseq/tree/nllb#supported-languages)
 
+## TTS Model Experiments
+
+The `tts_sandbox/` directory contains experimental code for testing different TTS models (OpenVoice, XTTS, Chatterbox). See [tts_sandbox/readme.md](tts_sandbox/readme.md) for details on running standalone TTS experiments.
+
+
 ## System Requirements
 
 ### Minimum Requirements
@@ -161,65 +183,11 @@ NLLB uses language codes in the format `xxx_Yyyy`:
 - **OS**: Windows, Linux, or macOS
 - **Python**: 3.8+
 
-### Recommended Specifications
-- **GPU**: NVIDIA RTX 3090 or better (24GB VRAM)
-- **RAM**: 32GB system RAM
-- **Storage**: 50GB+ free space
-- **CUDA**: 12.1 or newer
-
-## Performance
-
-Translation speed depends on your hardware:
-
-- **GPU (RTX 3090)**: ~100-200 segments/minute
-- **GPU (RTX 4090)**: ~200-400 segments/minute
-- **CPU**: ~5-10 segments/minute (not recommended)
-
-## Next Phases (Roadmap)
-
-### Phase 2: Audio Processing (Planned)
-- Extract audio from video files
-- Generate translated audio using Chatterbox TTS
-- Voice cloning to maintain speaker identity
-
-### Phase 3: Video Synchronization (Planned)
-- Merge translated audio with original video
-- Adjust video timing to match new audio length
-- Smooth transitions and maintain quality
-
-### Phase 4: Lip-Sync (Optional)
-- Implement Wav2Lip or Video-Retalking
-- Adjust lip movements to match translated audio
-
-## Technical Notes
-
-- **Model Size**: NLLB-200-3.3B is ~6.6GB (downloaded once and cached)
-- **GPU Memory**: Model uses ~7-8GB VRAM with float16 precision
-- **Batch Processing**: Adjust `batch_size` in config based on your GPU memory
-- **Language Detection**: Uses fasttext for fast, accurate detection
-- **Translation Quality**: NLLB-200-3.3B provides research-grade translation quality
-
-## Example Workflow
-
-```bash
-# 1. First time setup
-python setup.py
-
-# 2. Translate your SRT file only (optional)
-python -m src.translate_srt --input my_video.srt --output my_video_de.srt
-
-# 3. Full video translation pipeline
-python main.py --input my_video.mp4 --output my_video_de.mp4 --srt my_video.srt
-```
 
 ## License
 
 This project uses open-source models:
 - **NLLB-200**: CC-BY-NC 4.0 (Meta AI)
 - **fasttext**: MIT License (Meta AI)
+- **Chatterbox TTS**: MIT License (Resemble AI)
 
-## Support
-
-For issues or questions, please check:
-- Model documentation: https://huggingface.co/facebook/nllb-200-3.3B
-- NLLB paper: https://arxiv.org/abs/2207.04672
